@@ -1,0 +1,18 @@
+{
+  "name": "repoos",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "RepoOS — a browser desktop with its own accounts, notes and settings.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "pg": "^8.13.1"
+  }
+}
