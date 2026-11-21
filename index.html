@@ -1,103 +1,109 @@
-<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-wallpaper="aurora">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RepoOS v20.6 | Fixed Build</title>
-    <style>
-        :root { --glass: rgba(25, 25, 25, 0.7); --border: rgba(255, 255, 255, 0.15); --accent: #00a4ef; }
-        body, html { margin: 0; padding: 0; height: 100vh; font-family: "Segoe UI Variable Display", sans-serif; background: #000; color: white; overflow: hidden; }
-        
-        /* Animated Background */
-        #bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, #1e3a8a, #020617); }
-
-        /* --- OOBE SETUP (Centered & Glass) --- */
-        #oobe { position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.8); backdrop-filter: blur(20px); transition: 0.8s ease; }
-        .setup-card { background: var(--glass); backdrop-filter: blur(50px); border: 1px solid var(--border); border-radius: 28px; width: 400px; padding: 40px; text-align: center; box-shadow: 0 40px 100px rgba(0,0,0,0.5); }
-        .win-input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid var(--border); background: rgba(0,0,0,0.3); color: white; box-sizing: border-box; }
-        .win-btn { width: 100%; padding: 12px; border-radius: 10px; border: none; background: white; color: black; font-weight: 700; cursor: pointer; margin-top: 10px; }
-
-        /* --- DESKTOP ELEMENTS --- */
-        #desktop { display: none; width: 100vw; height: 100vh; position: relative; }
-        .dock-container { position: fixed; bottom: 15px; width: 100%; display: flex; justify-content: center; z-index: 9999; }
-        .dock { background: var(--glass); backdrop-filter: blur(40px); border: 1px solid var(--border); border-radius: 20px; padding: 8px 15px; display: flex; align-items: center; gap: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
-        .t-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; border-radius: 8px; font-size: 22px; transition: 0.2s; }
-        .t-icon:hover { background: rgba(255,255,255,0.1); transform: translateY(-5px); }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RepoOS</title>
+  <meta name="description" content="A personal desktop in the browser — notes, settings and your own account.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f8cff'/%3E%3Cpath d='M9 9h6v6H9zM17 9h6v6h-6zM9 17h6v6H9zM17 17h6v6h-6z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
+  <div class="wallpaper" aria-hidden="true"></div>
 
-<div id="bg"></div>
-
-<div id="oobe">
-    <div class="setup-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/Windows_11_logo.svg" width="50" style="margin-bottom:20px">
-        <h2>Windows 13</h2>
-        <input type="email" id="email" class="win-input" placeholder="Email">
-        <input type="password" id="pass" class="win-input" placeholder="Password">
-        <button class="win-btn" id="login-btn">Sign In</button>
-        <p id="err" style="color:red; font-size:12px;"></p>
+  <!-- Boot splash -->
+  <div class="boot" id="boot">
+    <div class="boot-mark" aria-hidden="true">
+      <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M9 9h6v6H9zM17 9h6v6h-6zM9 17h6v6H9zM17 17h6v6h-6z" fill="#fff"/></svg>
     </div>
-</div>
+    <p class="boot-label">Starting RepoOS</p>
+  </div>
 
-<div id="desktop">
-    <div class="dock-container">
-        <div class="dock">
-            <div class="t-icon">⊞</div>
-            <div class="t-icon">🐚</div>
-            <div style="font-size: 11px; padding-left: 10px; border-left: 1px solid var(--border); opacity:0.8;">
-                <div id="clock">12:00</div>
-                <div>2026</div>
-            </div>
+  <!-- Sign in / create account -->
+  <main class="auth" id="auth" hidden>
+    <section class="auth-card" aria-labelledby="auth-title">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M9 9h6v6H9zM17 9h6v6h-6zM9 17h6v6H9zM17 17h6v6h-6z" fill="#fff"/></svg>
+        </span>
+        <div>
+          <h1 id="auth-title">RepoOS</h1>
+          <p class="brand-sub">Your desktop. Your data. Your account.</p>
         </div>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Account action">
+        <button class="tab is-active" id="tab-signin" role="tab" aria-selected="true" type="button">Sign in</button>
+        <button class="tab" id="tab-signup" role="tab" aria-selected="false" type="button">Create account</button>
+      </div>
+
+      <form id="auth-form" class="auth-form" novalidate>
+        <label class="field" id="name-field" hidden>
+          <span>Display name</span>
+          <input id="auth-name" type="text" autocomplete="name" maxlength="40" placeholder="Alex">
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input id="auth-email" type="email" autocomplete="email" required placeholder="you@example.com">
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input id="auth-password" type="password" autocomplete="current-password" required placeholder="At least 8 characters">
+        </label>
+        <p class="form-error" id="auth-error" role="alert"></p>
+        <button class="btn primary" id="auth-submit" type="submit">Sign in</button>
+      </form>
+
+      <p class="auth-foot">Accounts and notes are stored on this app's own server — no third-party sign-in.</p>
+    </section>
+  </main>
+
+  <!-- Desktop -->
+  <main class="desktop" id="desktop" hidden>
+    <div class="desktop-icons" id="desktop-icons"></div>
+    <div class="windows" id="windows"></div>
+    <div class="toasts" id="toasts" aria-live="polite"></div>
+
+    <nav class="taskbar" aria-label="Taskbar">
+      <button class="start-btn" id="start-btn" type="button" aria-expanded="false" aria-controls="start-menu" title="Start">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M9 9h6v6H9zM17 9h6v6h-6zM9 17h6v6H9zM17 17h6v6h-6z" fill="#fff"/></svg>
+      </button>
+      <div class="taskbar-apps" id="taskbar-apps"></div>
+      <div class="tray">
+        <button class="tray-clock" id="tray-clock" type="button" title="Date and time">
+          <span id="clock-time">--:--</span>
+          <span id="clock-date"></span>
+        </button>
+        <button class="avatar" id="avatar" type="button" title="Account"></button>
+      </div>
+    </nav>
+
+    <div class="start-menu" id="start-menu" hidden>
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+        <input id="start-search" type="search" placeholder="Search apps" autocomplete="off">
+      </label>
+      <p class="start-label">Pinned</p>
+      <div class="start-grid" id="start-grid"></div>
+      <footer class="start-foot">
+        <span class="start-user" id="start-user"></span>
+        <button class="btn ghost small" id="sign-out" type="button">Sign out</button>
+      </footer>
     </div>
-</div>
 
-<script type="module">
-    // IMPORTANT: Fail-safe loader to prevent White Screen
-    window.onerror = function() { document.body.innerHTML = '<div style="color:white; padding:20px;">Critical Error: Check Firebase API Key or Network.</div>'; };
+    <div class="account-menu" id="account-menu" hidden>
+      <div class="account-head">
+        <span class="avatar large" id="account-avatar"></span>
+        <div>
+          <strong id="account-name"></strong>
+          <span id="account-email"></span>
+        </div>
+      </div>
+      <button class="menu-item" id="account-settings" type="button">Account settings</button>
+      <button class="menu-item danger" id="account-signout" type="button">Sign out</button>
+    </div>
+  </main>
 
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyBocjFMyLCxVZHcScOGBJEHXzFVEAjQ4DE",
-        authDomain: "repoos-2a182.firebaseapp.com",
-        projectId: "repoos-2a182",
-        storageBucket: "repoos-2a182.firebasestorage.app",
-        messagingSenderId: "534830946837",
-        appId: "1:534830946837:web:84b529cf74d77898bb4c1c"
-    };
-
-    try {
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-
-        document.getElementById('login-btn').onclick = () => {
-            const e = document.getElementById('email').value, p = document.getElementById('pass').value;
-            signInWithEmailAndPassword(auth, e, p).catch(err => {
-                document.getElementById('err').innerText = "Auth Error: Cloud link failed.";
-            });
-        };
-
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                document.getElementById('oobe').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('oobe').remove();
-                    document.getElementById('desktop').style.display = 'block';
-                }, 800);
-            }
-        });
-    } catch (e) {
-        console.error("Firebase failed to load. Entering Offline Mode.");
-    }
-
-    setInterval(() => {
-        const d = new Date();
-        document.getElementById('clock').innerText = d.getHours() + ":" + String(d.getMinutes()).padStart(2, '0');
-    }, 1000);
-</script>
+  <script type="module" src="/assets/app.js"></script>
 </body>
 </html>
