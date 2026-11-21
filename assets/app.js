@@ -158,7 +158,8 @@ function enterDesktop(person) {
   renderDesktopIcons();
   renderStartMenu();
   startClock();
-  openApp('notes');
+  // On narrow screens a window would cover the desktop icons, so start clean.
+  if (window.innerWidth >= 1100) openApp('notes');
 }
 
 function renderDesktopIcons() {

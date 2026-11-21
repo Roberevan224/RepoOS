@@ -246,7 +246,7 @@ button { cursor: pointer; }
 
 /* -------------------------------- windows -------------------------------- */
 
-.windows { position: absolute; inset: 0; pointer-events: none; }
+.windows { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
 
 .window {
   position: absolute;
